@@ -6,3 +6,5 @@ NSL-KDD
 
 # Ignore preprocessing work (for now)
 preprocessing.ipynb
+
+random-forest-model
