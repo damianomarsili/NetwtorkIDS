@@ -1,2 +1,2 @@
 # NewtorkIDS
-A K-Mediods implementation of an Intrustion Detection System for network traffic.
+A Random Forest implementation of an Intrustion Detection System for network traffic.
