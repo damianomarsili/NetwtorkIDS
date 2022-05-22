@@ -2,6 +2,16 @@ import numpy as np
 import pandas as pd
 
 def label_attacks(attack):
+    """
+    Maps attack labels to integer values
+    
+    Args:
+        attack: String. Label for the attack value of a certain input entry.
+    
+    Returns:
+        Integer value associated with the traffic. (0 - normal, 1 - dos_attack, 2 - probe_attack, 3 - priviledge_attack, 4 - access_attack)
+    """
+    
     # lists to hold our attack classifications
     dos_attacks = ['apache2','back','land','neptune','mailbomb','pod','processtable','smurf','teardrop','udpstorm','worm']
     probe_attacks = ['ipsweep','mscan','nmap','portsweep','saint','satan']
@@ -26,7 +36,7 @@ def load_data(filename):
     Args:
         filename: String. Path to the dataset directory.
     Returns:
-        TODO: 
+        Numpy array of shape [num_examples, num_features]
     """
     data_pd = pd.read_csv(filename)
     # add the column labels
@@ -37,16 +47,20 @@ def load_data(filename):
     ,'dst_host_same_src_port_rate','dst_host_srv_diff_host_rate','dst_host_serror_rate','dst_host_srv_serror_rate','dst_host_rerror_rate'
     ,'dst_host_srv_rerror_rate','attack','level'])    
 
+    # Map attacks to integer values
     data_pd.columns = columns
     data_labels = data_pd.attack.apply(label_attacks)
     data_pd['attack'] = data_labels
 
+    # Encode categorical features
     categorical_features  = ['protocol_type', 'service', 'flag']
     cat_encoded = pd.get_dummies(data_pd[categorical_features])
 
+    # Extract numerical features
     numerical_features = ['duration', 'src_bytes', 'dst_bytes']
     data = cat_encoded.join(data_pd[numerical_features])
-    return data.to_numpy(np.float32)
+
+    return data.to_numpy()
 
 def compute_accuracy(true_labels, predictions):
     """
