@@ -1,0 +1,8 @@
+# Ignore text files
+*.txt
+
+# Ignore dataset
+NSL-KDD
+
+# Ignore preprocessing work (for now)
+preprocessing.ipynb
