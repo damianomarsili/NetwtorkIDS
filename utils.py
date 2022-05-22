@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.metrics import accuracy_score
 
 def label_attacks(attack):
     """
@@ -11,7 +12,7 @@ def label_attacks(attack):
     Returns:
         Integer value associated with the traffic. (0 - normal, 1 - dos_attack, 2 - probe_attack, 3 - priviledge_attack, 4 - access_attack)
     """
-    
+
     # lists to hold our attack classifications
     dos_attacks = ['apache2','back','land','neptune','mailbomb','pod','processtable','smurf','teardrop','udpstorm','worm']
     probe_attacks = ['ipsweep','mscan','nmap','portsweep','saint','satan']
@@ -36,9 +37,9 @@ def load_data(filename):
     Args:
         filename: String. Path to the dataset directory.
     Returns:
-        Numpy array of shape [num_examples, num_features]
+        Pandas dataframe of shape [num_examples, num_features]
     """
-    data_pd = pd.read_csv(filename)
+    data_df = pd.read_csv(filename)
     # add the column labels
     columns = (['duration','protocol_type','service','flag','src_bytes','dst_bytes','land','wrong_fragment','urgent'
     ,'hot','num_failed_logins','logged_in','num_compromised','root_shell','su_attempted','num_root','num_file_creations','num_shells','num_access_files'
@@ -48,29 +49,30 @@ def load_data(filename):
     ,'dst_host_srv_rerror_rate','attack','level'])    
 
     # Map attacks to integer values
-    data_pd.columns = columns
-    data_labels = data_pd.attack.apply(label_attacks)
-    data_pd['attack'] = data_labels
+    data_df.columns = columns
+    data_labels = data_df.attack.apply(label_attacks)
+    data_df['attack'] = data_labels
+    
 
     # Encode categorical features
     categorical_features  = ['protocol_type', 'service', 'flag']
-    cat_encoded = pd.get_dummies(data_pd[categorical_features])
+    cat_encoded = pd.get_dummies(data_df[categorical_features])
 
     # Extract numerical features
     numerical_features = ['duration', 'src_bytes', 'dst_bytes']
-    data = cat_encoded.join(data_pd[numerical_features])
+    X = cat_encoded.join(data_df[numerical_features])
+    Y = data_df['attack']
+    return X,Y
 
-    return data.to_numpy()
-
-def compute_accuracy(true_labels, predictions):
+def compute_accuracy(predictions, true_labels):
     """
     Computes the accuracy of models predictions with respect to the true labels.
     
     Args:
-        true_labels: TODO: determine type of labels
-        predictions: TODO: determine type of predictions
+        predictions: Numpy array of shape [num_examples, 1] of model predictions
+        true_labels: Numpy array of shape [num_examples, 1] of true labels
+        
     Returns:
-        TODO: determine accuracy metric    
+        Float: Accuracy of predictions vs. true labels.
     """
-    
-    pass
+    return accuracy_score(predictions, true_labels)
