@@ -10,26 +10,21 @@ from utils import load_data, compute_accuracy
 
 def get_args():
     """Parse arguments for IDS model parameters. """ 
-    # TODO: Update description based on implementation.
     p = ap.ArgumentParser(description = "A ___ based Intrusion detection system for network traffic diagnostics.") 
 
     # Meta arguments
     p.add_argument("--mode", type=str, required=True, choices=["train", "predict"], help=
             "Set mode: train or predict.")
-    p.add_argument("--model", type=str, required=True, choices=["random-forest"], help="Select which model to use.")
+    p.add_argument("--model", type=str, required=True, choices=["random-forest", "naive-bayes"], help="Select which model to use.")
     p.add_argument("--train-data", type=str, help="Path to training data")
     p.add_argument("--predict-data", type=str, help="Path to predict data")
     p.add_argument("--model-file", type=str, required=True, 
         help="Path where model will be saved or loaded")
     
-    # Model Hyperparameters - TODO: figure out model hyperparameters
-
-    p.add_argument("--training-iterations", type=int, help="Number of training iterations")
-
     return p.parse_args()
 
 
-def check_args(args): # TODO - modify params based on hyperparameters identified.
+def check_args(args):
         mandatory_args = {'mode', 'model', 'model_file', 'predict_data', 'train_data'}
         if not mandatory_args.issubset(set(dir(args))):
                 raise Exception("Incomplete set of arguments.")
@@ -51,16 +46,19 @@ def check_args(args): # TODO - modify params based on hyperparameters identified
         else:
                 raise Exception("Invalid mode.")
         
-        if args.model.lower() != 'random-forest':
+        if args.model.lower() not in ['random-forest','naive-bayes']:
              raise Exception("Invalid model.")
 
-def train_random_forest(args):
+def train(args):
         """Fit a models parameters to labeled network traffic given the parameters specified in args"""
         # Load the training data
         X, Y = load_data(args.train_data)
 
         # Build the model
-        model = models.Random_Forest() #TODO: define
+        if (args.model.lower() == 'random-forest'):
+                model = models.Random_Forest()
+        elif (args.model.lower() == 'naive-bayes'):
+                model = models.Naive_Bayes()
 
         # Run the training loop
         model.fit(X = X, Y = Y)
@@ -87,8 +85,7 @@ if __name__ == "__main__":
         print(args)
 
         if args.mode.lower() == 'train':
-                if args.model.lower() == 'random-forest':    
-                        train_random_forest(args)
+                train(args)
         if args.mode.lower() == 'predict':
                 predict(args)
                 
