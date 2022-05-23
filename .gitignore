@@ -4,6 +4,9 @@ notes.txt
 # Ignore dataset
 NSL-KDD
 
+# Ignore pycache
+__pycache__
+
 # Ignore preprocessing work (for now)
 preprocessing.ipynb
 
