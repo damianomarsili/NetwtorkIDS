@@ -1,5 +1,5 @@
-# Ignore text files
-*.txt
+# Ignore note file
+notes.txt
 
 # Ignore dataset
 NSL-KDD
