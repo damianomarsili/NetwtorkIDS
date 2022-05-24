@@ -10,7 +10,7 @@ The goal of the models is to classify network traffic features into 5 categories
 4. Priviledge Attack
 5. Access Attack
 
-The models are trained and evaluated against the [NSL-KDD](https://www.unb.ca/cic/datasets/nsl.html) benchmark dataset. Currently, the best model is the Random Forest implementation, which achieves an accuracy of upwards of 97.6% on held-out test data.
+The models are trained and evaluated against the [NSL-KDD](https://www.unb.ca/cic/datasets/nsl.html) benchmark dataset. Currently, the best model is the Random Forest implementation, which achieves an accuracy of upwards of 99.3% on binary classification (attack vs. normal) and 97.6% on multi-class classification (what type of attack it is) on held-out test data.
 
 # Setup
 Install dependencies
